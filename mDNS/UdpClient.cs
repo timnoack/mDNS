@@ -14,25 +14,19 @@ namespace mDNS
         public DatagramSocket Socket {
             get { return socket; } }
 
-        public event Windows.Foundation.TypedEventHandler<DatagramSocket, DatagramSocketMessageReceivedEventArgs> MessageReceived;
+
 
         public UdpClient(int mDNS_PORT)
         {
             socket = new DatagramSocket();
             this.mDNS_PORT = mDNS_PORT;
-            socket.Control.MulticastOnly = true;
         }
 
-        private void Socket_MessageReceived(DatagramSocket sender, DatagramSocketMessageReceivedEventArgs args)
-        {
-            if (MessageReceived != null)
-                MessageReceived(sender, args);
-        }
 
         public async Task Bind()
         {
+            socket.Control.MulticastOnly = true;
             await socket.BindServiceNameAsync((mDNS_PORT.ToString()));
-            socket.MessageReceived += Socket_MessageReceived;
         }
 
         public void JoinMulticastGroup(IPAddress group, int v)

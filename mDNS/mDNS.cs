@@ -414,11 +414,7 @@ namespace mDNS
 			}
 			socket = new UdpClient(DNSConstants.MDNS_PORT);
             await socket.Bind();
-			// TODO: can we just ignore this?
-//			if ((hostInfo != null) && (localHost.Interface != null))
-//			{
-//				socket.setNetworkInterface(hostInfo.Interface);
-//			}
+
 			socket.JoinMulticastGroup((IPAddress) group, 255);
 		}
 		

@@ -368,7 +368,7 @@ namespace mDNS
 					buf.Append("\n");
 					
 					// limit message size
-					if (off + 32 >= 256)
+					if (off + 32 >= 64)
 					{
 						buf.Append("....\n");
 						break;

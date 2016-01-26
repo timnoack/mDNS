@@ -27,7 +27,8 @@ namespace mDNS
 		public SocketListener(mDNS enclosingInstance)
 		{
 			InitBlock(enclosingInstance);
-		}
+            
+        }
 		private void  InitBlock(mDNS enclosingInstance)
 		{
 			this.enclosingInstance = enclosingInstance;
@@ -43,25 +44,25 @@ namespace mDNS
 		}
 		public virtual void Run(IAsyncAction action)
 		{
-            Enclosing_Instance.Socket.MessageReceived += Socket_MessageReceived;
-			try
-			{
-				sbyte[] buf = new sbyte[DNSConstants.MAX_MSG_ABSOLUTE];
-				SupportClass.PacketSupport packet = new SupportClass.PacketSupport(SupportClass.ToByteArray(buf), buf.Length);
-				while (Enclosing_Instance.State != DNSState.CANCELED)
-				{
-					
-				}
-			}
-			catch (IOException e)
-			{
-				if (Enclosing_Instance.State != DNSState.CANCELED)
-				{
-					logger.Warn("run() exception ", e);
-					Enclosing_Instance.Recover();
-				}
-			}
-		}
+            Enclosing_Instance.Socket.Socket.MessageReceived += Socket_MessageReceived;
+            //try
+            //{
+            //	sbyte[] buf = new sbyte[DNSConstants.MAX_MSG_ABSOLUTE];
+            //	SupportClass.PacketSupport packet = new SupportClass.PacketSupport(SupportClass.ToByteArray(buf), buf.Length);
+            //	while (Enclosing_Instance.State != DNSState.CANCELED)
+            //	{
+
+            //	}
+            //}
+            //catch (IOException e)
+            //{
+            //	if (Enclosing_Instance.State != DNSState.CANCELED)
+            //	{
+            //		logger.Warn("run() exception ", e);
+            //		Enclosing_Instance.Recover();
+            //	}
+            //}
+        }
 
         private void Socket_MessageReceived(Windows.Networking.Sockets.DatagramSocket sender, Windows.Networking.Sockets.DatagramSocketMessageReceivedEventArgs args)
         {
