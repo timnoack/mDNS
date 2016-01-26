@@ -18,14 +18,18 @@ namespace TestApp
 {
     public sealed partial class MainPage : Page
     {
+        mDNS.mDNS dns;
         public MainPage()
         {
             this.InitializeComponent();
+            // hide content to show status label
+            this.contentGrid.Visibility = Visibility.Collapsed;
         }
-        mDNS.mDNS dns;
+
 
         private void btnList_Click(object sender, RoutedEventArgs e)
         {
+            // disable button and list services
             btnList.IsEnabled = false;   
             dns.List(textBox.Text).ContinueWith(new Action<System.Threading.Tasks.Task<mDNS.ServiceInfo[]>>((task) => {
                 mDNS.ServiceInfo[] services = task.Result;
@@ -35,9 +39,6 @@ namespace TestApp
                             listBox.Items.Add(new ServiceListBoxItem() { Service = service });
                         btnList.IsEnabled = true;
                     }));
-
-
-                
             }));
 
 
@@ -50,8 +51,11 @@ namespace TestApp
 
             dns = new mDNS.mDNS();
 
-            var init = dns.Init().ContinueWith(new Action<System.Threading.Tasks.Task>(delegate {
-                var disp = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, new Windows.UI.Core.DispatchedHandler(delegate {
+            // init
+            var init = dns.Init().ContinueWith(new Action<System.Threading.Tasks.Task>(delegate
+            {
+                var disp = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, new Windows.UI.Core.DispatchedHandler(delegate
+                {
                     txtInit.Visibility = Visibility.Collapsed;
                     contentGrid.Visibility = Visibility.Visible;
                     btnList_Click(this, null);
@@ -59,13 +63,16 @@ namespace TestApp
                 }));
             }));
 
-
         }
 
         private void LogManager_MessageReceived(object sender, mDNS.Logging.LogMessageEventArgs e)
         {
-            if(e.Type != mDNS.Logging.LogType.Debug)
-            System.Diagnostics.Debug.WriteLine("mDNS " + e.ToString());
+            var disp = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, new Windows.UI.Core.DispatchedHandler(delegate
+            {
+                consoleBox.Text += e.ToString() + Environment.NewLine;
+
+            }));
+
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -144,16 +151,34 @@ namespace TestApp
                 detailBox.Items.Clear();
             else
             {
+                // show details
                 ServiceListBoxItem item = (ServiceListBoxItem)listBox.SelectedItem;
                 mDNS.ServiceInfo info = item.Service;
                 info.PropertyNames.Reset();
                 detailBox.Items.Clear();
-                detailBox.Items.Add(info.HostAddress);
+                detailBox.Items.Add(info.HostAddress + ":" + info.Port);
                 System.Collections.IEnumerator enumerator = info.PropertyNames;
                 while(enumerator.MoveNext())
                 {
                     detailBox.Items.Add(enumerator.Current + ": " + info.GetPropertyString(enumerator.Current.ToString()));
                 }
+            }
+        }
+
+
+        private void btnShowConsole_Click(object sender, RoutedEventArgs e)
+        {
+            if(consoleBox.Visibility == Visibility.Visible)
+            {
+                // hide console
+                consoleBox.Visibility = Visibility.Collapsed;
+                Grid.SetColumnSpan(contentGrid, 2);
+            }
+            else
+            {
+                // show console
+                consoleBox.Visibility = Visibility.Visible;
+                Grid.SetColumnSpan(contentGrid, 1);
             }
         }
 
@@ -166,5 +191,6 @@ namespace TestApp
                 return Service.QualifiedName + " " + Service.HostAddress;
             }
         }
+
     }
 }

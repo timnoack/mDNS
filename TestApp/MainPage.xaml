@@ -5,13 +5,18 @@
     xmlns:local="using:TestApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Loaded="Page_Loaded" MinHeight="700" MinWidth="700" Unloaded="Page_Unloaded">
+    mc:Ignorable="d" Loaded="Page_Loaded" MinHeight="700" MinWidth="1050" Unloaded="Page_Unloaded">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock x:Name="txtInit" FontSize="36" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF686868">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="txtInit" FontSize="36" VerticalAlignment="Center" Grid.ColumnSpan="2" HorizontalAlignment="Center" Foreground="#FF686868">
     		<Run Text="Initializing mDNS, please wait"/>
         </TextBlock>
-        <Grid Visibility="Collapsed" x:Name="contentGrid" Width="600" Height="500">
+        <TextBox x:Name="consoleBox" Grid.Column="1" Visibility="Collapsed" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible" />
+        <Grid Visibility="Visible" x:Name="contentGrid" Grid.Column="0" Grid.ColumnSpan="2" Width="500" Height="500">
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="65"/>
@@ -20,6 +25,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="35"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
@@ -33,6 +39,8 @@
             <ListBox x:Name="listBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" SelectionChanged="listBox_SelectionChanged"/>
             <TextBlock Text="Service details:" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Grid.Row="5"/>
             <ListBox x:Name="detailBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6"/>
+            <Button x:Name="btnShowConsole" Content="Show / hide console" Grid.ColumnSpan="2" Grid.Row="7" HorizontalAlignment="Stretch" Height="35" VerticalAlignment="Top" Click="btnShowConsole_Click"/>
+
         </Grid>
 
 
