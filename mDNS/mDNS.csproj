@@ -129,7 +129,6 @@
     <Compile Include="Logging\LogMessageEventArgs.cs" />
     <Compile Include="Pointer.cs" />
     <Compile Include="Prober.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordReaper.cs" />
     <Compile Include="Renewer.cs" />
     <Compile Include="Responder.cs" />
