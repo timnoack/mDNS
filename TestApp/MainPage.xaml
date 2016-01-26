@@ -1,0 +1,40 @@
+﻿<Page
+    x:Class="TestApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TestApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Loaded="Page_Loaded" MinHeight="700" MinWidth="700" Unloaded="Page_Unloaded">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock x:Name="txtInit" FontSize="36" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF686868">
+    		<Run Text="Initializing mDNS, please wait"/>
+        </TextBlock>
+        <Grid Visibility="Collapsed" x:Name="contentGrid" Width="600" Height="500">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="65"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="btnSimulate" Content="Simulate Apple TV and Apple HomeKit!" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Height="35" VerticalAlignment="Top" Click="btnSimulate_Click"/>
+            <TextBlock x:Name="lblSimulateStatus" Grid.ColumnSpan="2" HorizontalAlignment="Center" Grid.Row="1"/>
+            <TextBlock Text="Service name:" Grid.Row="2"/>
+            <TextBox x:Name="textBox" Grid.Row="2" HorizontalAlignment="Stretch" Grid.Column="1" TextWrapping="Wrap" Text="_printer._tcp.local." VerticalAlignment="Stretch"/>
+            <Button x:Name="btnList" Grid.Row="3" Content="Refresh services" HorizontalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" Click="btnList_Click"/>
+            <ListBox x:Name="listBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" SelectionChanged="listBox_SelectionChanged"/>
+            <TextBlock Text="Service details:" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Grid.Row="5"/>
+            <ListBox x:Name="detailBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6"/>
+        </Grid>
+
+
+    </Grid>
+</Page>
