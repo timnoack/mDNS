@@ -16,7 +16,7 @@
     		<Run Text="Initializing mDNS, please wait"/>
         </TextBlock>
         <TextBox x:Name="consoleBox" Grid.Column="1" Visibility="Collapsed" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible" />
-        <Grid Visibility="Visible" x:Name="contentGrid" Grid.Column="0" Grid.ColumnSpan="2" Width="500" Height="500">
+        <Grid Visibility="Collapsed" x:Name="contentGrid" Grid.Column="0" Grid.ColumnSpan="2" Width="500" Height="500">
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="65"/>

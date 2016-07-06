@@ -89,6 +89,17 @@ namespace mDNS
 			}
 			
 		}
+
+        /// <summary>
+        /// Returns whether to use IPV6 or IPV4
+        /// </summary>
+        virtual public bool UseIPV6
+        {
+            get
+            {
+                return ipv6;
+            }
+        }
 		/// <summary> Return the address of the interface to which this instance of JmDNS is
 		/// bound.
 		/// </summary>
@@ -238,6 +249,11 @@ namespace mDNS
 		/// 
 		/// </summary>
 		internal HostInfo localHost;
+
+        /// <summary>
+        /// Use IPV6 or IPV4
+        /// </summary>
+        internal bool ipv6 = false;
 		
 		private SupportClass.ThreadClass incomingListener = null;
 		
@@ -304,14 +320,15 @@ namespace mDNS
         private string _cachedName;
 
 		/// <summary> Create an instance of JmDNS.</summary>
-		public mDNS()
+		public mDNS(bool ipv6 = false)
 		{
+            this.ipv6 = ipv6;
 			InitBlock();
 			logger.Debug("JmDNS instance created");
 			try
 			{
                 // TODO: check these
-                IPAddress addr = Dns.GetLocalIp();
+                IPAddress addr = Dns.GetLocalIp(ipv6);
                 _cachedAddress = IPAddress.IsLoopback(addr) ? null : addr;
                 _cachedName = Dns.GetLocalHostName();
 
@@ -348,6 +365,7 @@ namespace mDNS
 		/// </summary>
 		public async Task Init()
 		{
+
             IPAddress address = _cachedAddress;
             string name = _cachedName;
             // A host name with "." is illegal. so strip off everything and append .local.
@@ -379,7 +397,7 @@ namespace mDNS
 			incomingListener = new SupportClass.ThreadClass(new WorkItemHandler(new SocketListener(this).Run));
 			
 			// Bind to multicast socket
-			await OpenMulticastSocket(localHost);
+			await OpenMulticastSocket(localHost, ipv6);
 			Start(services.Values);
 		}
 		
@@ -400,17 +418,17 @@ namespace mDNS
 				}
 			}
 		}
-		private async Task OpenMulticastSocket(HostInfo hostInfo)
+		private async Task OpenMulticastSocket(HostInfo hostInfo, bool ipv6)
 		{
 			if (group == null)
 			{
 				// TODO: not going to resolve this, just going to set it directly
 				//group = Dns.Resolve(DNSConstants.MDNS_GROUP).AddressList[0];
-				group = IPAddress.Parse(DNSConstants.MDNS_GROUP);
+				group = IPAddress.Parse(ipv6 ? DNSConstants.MDNS_GROUP_IPV6 : DNSConstants.MDNS_GROUP);
 			}
 			if (socket != null)
 			{
-				this.CloseMulticastSocket();
+				await this.CloseMulticastSocket();
 			}
 			socket = new UdpClient(DNSConstants.MDNS_PORT);
             await socket.Bind();
@@ -1206,7 +1224,7 @@ namespace mDNS
 					//
 					try
 					{
-						OpenMulticastSocket(localHost);
+						OpenMulticastSocket(localHost, ipv6);
 						Start(oldServiceInfos);
 					}
 					catch (Exception exception)

@@ -47,15 +47,13 @@ namespace mDNS
 
         public async Task Send(byte[] data, int length, IPEndPoint iPEndPoint)
         {
-            var waitHandle = socket.GetOutputStreamAsync(new Windows.Networking.HostName(iPEndPoint.Address.ToString()), iPEndPoint.Port.ToString());
+            var stream = await socket.GetOutputStreamAsync(new Windows.Networking.HostName(iPEndPoint.Address.ToString()), iPEndPoint.Port.ToString());
 
-            byte[] buffer = new byte[length];
-            Array.Copy(data, buffer, length);
-            var iBuffer = buffer.AsBuffer();
-
-            var outputBuffer = await waitHandle;
-            await outputBuffer.WriteAsync(iBuffer);
-            await outputBuffer.FlushAsync();
+            DataWriter writer = new DataWriter(stream);
+            for (int i = 0; i < length; i++)
+                writer.WriteByte(data[i]);
+      
+            await writer.StoreAsync();
         }
 
         public void Dispose()

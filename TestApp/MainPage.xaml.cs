@@ -49,7 +49,7 @@ namespace TestApp
         {
             mDNS.Logging.LogManager.MessageReceived += LogManager_MessageReceived;
 
-            dns = new mDNS.mDNS();
+            dns = new mDNS.mDNS(false);
 
             // init
             var init = dns.Init().ContinueWith(new Action<System.Threading.Tasks.Task>(delegate

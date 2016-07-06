@@ -45,34 +45,14 @@ namespace mDNS
 		public virtual void Run(IAsyncAction action)
 		{
             Enclosing_Instance.Socket.Socket.MessageReceived += Socket_MessageReceived;
-            //try
-            //{
-            //	sbyte[] buf = new sbyte[DNSConstants.MAX_MSG_ABSOLUTE];
-            //	SupportClass.PacketSupport packet = new SupportClass.PacketSupport(SupportClass.ToByteArray(buf), buf.Length);
-            //	while (Enclosing_Instance.State != DNSState.CANCELED)
-            //	{
-
-            //	}
-            //}
-            //catch (IOException e)
-            //{
-            //	if (Enclosing_Instance.State != DNSState.CANCELED)
-            //	{
-            //		logger.Warn("run() exception ", e);
-            //		Enclosing_Instance.Recover();
-            //	}
-            //}
         }
 
         private void Socket_MessageReceived(Windows.Networking.Sockets.DatagramSocket sender, Windows.Networking.Sockets.DatagramSocketMessageReceivedEventArgs args)
         {
-            byte[] result;
+            uint dataLength = args.GetDataReader().UnconsumedBufferLength;
+            byte[] result = new byte[dataLength];
+            args.GetDataReader().ReadBytes(result);
 
-            using (var streamReader = new MemoryStream())
-            {
-                args.GetDataStream().AsStreamForRead().CopyTo(streamReader);
-                result = streamReader.ToArray();
-            }
             SupportClass.PacketSupport packet = new SupportClass.PacketSupport(result, result.Length, new System.Net.IPEndPoint(System.Net.IPAddress.Parse(args.RemoteAddress.CanonicalName), int.Parse(args.RemotePort)));
             try
             {
